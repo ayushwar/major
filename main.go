@@ -31,6 +31,9 @@ func main() {
 	routes.RegisterRoutes(server)
 
 	port := os.Getenv("PORT")
+		if port == "" {
+		port = "8080" // local fallback only
+	}
 	log.Println("Server running on http://localhost" + port)
 	if err := server.Run(":"+port); err != nil {
 		log.Fatal(" Failed to start server: ", err)
