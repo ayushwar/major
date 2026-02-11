@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	"os"
 	"github.com/ayushwar/major/database"
 	"github.com/ayushwar/major/routes"
 	"github.com/gin-gonic/gin"
@@ -30,9 +30,9 @@ func main() {
 
 	routes.RegisterRoutes(server)
 
-	port := ":8080"
+	port := os.Getenv("PORT")
 	log.Println("Server running on http://localhost" + port)
-	if err := server.Run(port); err != nil {
+	if err := server.Run(":"+port); err != nil {
 		log.Fatal(" Failed to start server: ", err)
 	}
 }

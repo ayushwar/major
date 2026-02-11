@@ -232,7 +232,7 @@ func ResetPassword(ctx *gin.Context) {
 	type Input struct {
 		Email       string `json:"email" binding:"required,email"`
 		OTP         string `json:"otp" binding:"required"`
-		NewPassword string `json:"new_password" binding:"required,min=6"`
+		NewPassword string `json:"new_password" binding:"required,min=8"`
 	}
 
 	var input Input
