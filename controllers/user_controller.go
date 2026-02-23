@@ -177,7 +177,17 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(500, gin.H{"error": "failed to generate token", "details": err.Error()})
 		return
 	}
-	ctx.JSON(200, gin.H{"message": "login successfully", "token": tokenString})
+	// ctx.JSON(200, gin.H{"message": "login successfully", "token": tokenString})
+	ctx.JSON(200, gin.H{
+    "token": tokenString,
+    "user": gin.H{
+        "id":    user.ID,
+        "name":  user.Name,
+        "email": user.Email,
+        "role":  user.Role,
+    },
+})
+
 }
 
 // ForgotPassword handles password reset token generation and email sending
@@ -232,7 +242,7 @@ func ResetPassword(ctx *gin.Context) {
 	type Input struct {
 		Email       string `json:"email" binding:"required,email"`
 		OTP         string `json:"otp" binding:"required"`
-		NewPassword string `json:"new_password" binding:"required,min=6"`
+		NewPassword string `json:"new_password" binding:"required,min=8"`
 	}
 
 	var input Input
