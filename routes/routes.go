@@ -8,31 +8,56 @@ import (
 )
 
 // RegisterRoutes sets up all API endpoints
-func RegisterRoutes(router *gin.Engine) {
+func RegisterRoutes(
+	router *gin.Engine,
+	upload *controllers.UploadHandler,
+	list *controllers.ListHandler,
+) {
 
-    // User routes
-    userRoutes := router.Group("/users")
-    {
-        userRoutes.POST("/register", controllers.Register)
-        userRoutes.POST("/verify_email", controllers.VerifyEmail)
-        userRoutes.POST("/login", controllers.Login)
-        userRoutes.POST("/forget_password", controllers.ForgotPassword)
-        userRoutes.POST("/reset_password", controllers.ResetPassword)
-    }
+	// User routes
+	userRoutes := router.Group("/users")
+	{
+		userRoutes.POST("/register", controllers.Register)
+		userRoutes.POST("/verify_email", controllers.VerifyEmail)
+		userRoutes.POST("/login", controllers.Login)
+		userRoutes.POST("/forget_password", controllers.ForgotPassword)
+		userRoutes.POST("/reset_password", controllers.ResetPassword)
+	}
 
-    // Other resource routes
-    CourseRoutes(router)
-    // LectureRoutes(router)
-    AssignmentRoutes(router)
-    QuestionRoutes(router)
-    OptionRoutes(router)
-    RegisterEnrollmentRoutes(router)
-    SubmissionRoutes(router)
-    ProgressRoutes(router)
-    CertificateRoutes(router)
-    DepartmentRoutes(router)
+	// Other routes
+	CourseRoutes(router)
+	AssignmentRoutes(router)
+	QuestionRoutes(router)
+	OptionRoutes(router)
+	RegisterEnrollmentRoutes(router)
+	SubmissionRoutes(router)
+	ProgressRoutes(router)
+	CertificateRoutes(router)
+	DepartmentRoutes(router)
+
+	// ✅ video routes
+	VideoRoutes(router, upload, list)
 }
 
+func VideoRoutes(
+	router *gin.Engine,
+	upload *controllers.UploadHandler,
+	list *controllers.ListHandler,
+) {
+	videos := router.Group("/api/videos")
+	{
+		// Public: list videos
+		videos.GET("", list.List)
+
+		// Protected: teacher only
+		videos.POST(
+			"/upload",
+			middlewares.AuthMiddleware(),
+			middlewares.RoleMiddleware("teacher"),
+			upload.Upload,
+		)
+	}
+}
 
 func CourseRoutes(router *gin.Engine) {
     courses := router.Group("/courses")

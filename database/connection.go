@@ -61,6 +61,7 @@ func ConnectDB() {
 		&models.Progress{},
 		&models.Certificate{},
 		&models.Department{},
+		&models.Video{},
 	)
 	if err != nil {
 		log.Fatal("❌ Migration failed: ", err)
